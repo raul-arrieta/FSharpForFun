@@ -1,0 +1,9 @@
+language: fsharp
+mono:
+  - latest
+install:
+ - travis_retry nuget restore FSharpForFun/FSharpForFun.sln
+script:
+  - xbuild /p:Configuration=Release FSharpForFun/FSharpForFun.sln
+  - mono FSharpForFun/FSharpForFun/bin/Release/FSharpForFun.exe
+  - xbuild /p:Configuration=Release FSharpForFun/FSharpForFun.sln
