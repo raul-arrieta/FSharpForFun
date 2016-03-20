@@ -100,7 +100,7 @@ failfUnlessExists templateSolutionFile "Cannot find solution file template %s"
 let projectName =
   match vars.["##ProjectName##"] with
   | Some p -> p.Replace(" ", "")
-  | None -> "FSharpForFun"
+  | None -> "FSharpForFunCI"
 let solutionFile = localFile (projectName + ".sln")
 move templateSolutionFile solutionFile
 
