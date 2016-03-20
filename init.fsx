@@ -101,7 +101,7 @@ let givenOrigin = if wantGit
 
 //Basic settings
 let solutionTemplateName = "FSharpForFun/FSharpForFun"
-let projectTemplateName = "FSharpForFun"
+let projectTemplateName = "FSharpForFun/FSharpForFunCI"
 let oldProjectGuid = Guid.NewGuid().ToString()
 let projectGuid = Guid.NewGuid().ToString()
 let oldTestProjectGuid = Guid.NewGuid().ToString()
