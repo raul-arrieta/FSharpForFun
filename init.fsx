@@ -100,7 +100,7 @@ let givenOrigin = if wantGit
                     else None
 
 //Basic settings
-let solutionTemplateName = "FSharpForFun"
+let solutionTemplateName = "FSharpForFun/FSharpForFun"
 let projectTemplateName = "FSharpForFun"
 let oldProjectGuid = Guid.NewGuid().ToString()
 let projectGuid = Guid.NewGuid().ToString()
@@ -115,7 +115,7 @@ failfUnlessExists templateSolutionFile "Cannot find solution file template %s"
 let projectName =
   match vars.["##ProjectName##"] with
   | Some p -> p.Replace(" ", "")
-  | None -> "ProjectScaffold"
+  | None -> "FSharpForFun"
 let solutionFile = localFile (projectName + ".sln")
 move templateSolutionFile solutionFile
 
