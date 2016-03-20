@@ -42,7 +42,7 @@ let runningOnTravis =
   not <| String.IsNullOrEmpty(Environment.GetEnvironmentVariable("TRAVIS"))
 let inCI = runningOnAppveyor || runningOnTravis
 let promptFor friendlyName =
-  if inCI then Some "CONTINUOUSINTEGRATION"
+  if inCI then Some "FSharpForFunCI"
   else prompt (sprintf "%s: " friendlyName)
 let rec promptForNoSpaces friendlyName =
   match promptFor friendlyName with
@@ -68,21 +68,6 @@ let print msg =
   %s
   """ border msg border
 
-print """
-# Project Scaffold Init Script
-# Please answer a few questions and we will generate
-# two files:
-#
-# build.fsx               This will be your build script
-# docs/tools/generate.fsx This script will generate your
-#                         documentation
-#
-# NOTE: Aside from the Project Name, you may leave any
-# of these blank, but you will need to change the defaults
-# in the generated scripts.
-#
-"""
-
 let vars = Dictionary<string,string option>()
 vars.["##ProjectName##"] <- promptForNoSpaces "Project Name (used for solution/project files)"
 vars.["##Summary##"]     <- promptFor "Summary (a short description)"
@@ -101,7 +86,7 @@ let givenOrigin = if wantGit
 
 //Basic settings
 let solutionTemplateName = "FSharpForFun/FSharpForFun"
-let projectTemplateName = "FSharpForFun/FSharpForFunCI"
+let projectTemplateName = "FSharpForFun"
 let oldProjectGuid = Guid.NewGuid().ToString()
 let projectGuid = Guid.NewGuid().ToString()
 let oldTestProjectGuid = Guid.NewGuid().ToString()
@@ -195,7 +180,6 @@ let generate templatePath generatedFilePath =
   print (sprintf "# Generated %s" generatedFilePath)
 
 generate (localFile "build.template") (localFile "build.fsx")
-generate (localFile "docs/tools/generate.template") (localFile "docs/tools/generate.fsx")
 
 //Handle source control
 let isGitRepo () =
