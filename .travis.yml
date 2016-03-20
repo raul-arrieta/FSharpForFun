@@ -1,11 +1,9 @@
-language: fsharp
-solution: FSharpForFun/FSharpForFun.sln
-mono:
-  - latest
-install:
- - nuget
- - nuget restore FSharpForFun/FSharpForFun.sln -Verbosity detailed
- - nuget update FSharpForFun/FSharpForFun.sln -Verbosity detailed
-script:
-  - xbuild /p:Configuration=Release FSharpForFun/FSharpForFun.sln
-  - mono FSharpForFun/FSharpForFun/bin/Release/FSharpForFun.exe
+language: csharp
+
+sudo: false  # use the new container-based Travis infrastructure 
+
+before_install:
+  - chmod +x build.sh
+ 
+script: 
+  - ./build.sh All
