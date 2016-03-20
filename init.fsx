@@ -27,6 +27,16 @@ let move p1 p2 =
     Directory.Move(p1, p2)
   else
     failwithf "Could not move %s to %s" p1 p2
+let copy p1 p2 =
+  if File.Exists p1 then
+    printfn "copy %s to %s" p1 p2
+    File.Copy(p1, p2)
+  elif Directory.Exists p1 then
+    printfn "copy directory %s to %s" p1 p2
+    Directory.Copy(p1, p2)
+  else
+    failwithf "Could not copy %s to %s" p1 p2
+    
 let localFile f = combine f __SOURCE_DIRECTORY__
 let buildTemplatePath = localFile "build.template"
 let outputPath = localFile "build.fsx"
@@ -99,10 +109,10 @@ failfUnlessExists templateSolutionFile "Cannot find solution file template %s"
 
 let projectName =
   match vars.["##ProjectName##"] with
-  | Some p -> p.Replace("FSharpForFun", "FSharpForFunCI")
+  | Some p -> p.Replace(" ", "")
   | None -> "FSharpForFunCI"
 let solutionFile = localFile (projectName + ".sln")
-move templateSolutionFile solutionFile
+copy templateSolutionFile solutionFile
 
 //Rename project files and directories
 dirsWithProjects
@@ -111,11 +121,11 @@ dirsWithProjects
     pd
     |> subDirectories
     |> Array.collect (fun d -> filesInDirMatching "*.?sproj" d)
-    |> Array.iter (fun f -> f.MoveTo(f.Directory.FullName @@ (f.Name.Replace(projectTemplateName, projectName))))
+    |> Array.iter (fun f -> f.CopyTo(f.Directory.FullName @@ (f.Name.Replace(projectTemplateName, projectName))))
     // project directories
     pd
     |> subDirectories
-    |> Array.iter (fun d -> d.MoveTo(pd.FullName @@ (d.Name.Replace(projectTemplateName, projectName))))
+    |> Array.iter (fun d -> d.CopyTo(pd.FullName @@ (d.Name.Replace(projectTemplateName, projectName))))
     )
 
 //Now that everything is renamed, we need to update the content of some files
