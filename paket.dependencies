@@ -1,16 +1,6 @@
+framework: net461
 source https://nuget.org/api/v2
 
-group Build
-  source https://nuget.org/api/v2
-  
-  nuget SourceLink.Fake
-  nuget FAKE
-  nuget FSharp.Formatting
-
-  github fsharp/FAKE modules/Octokit/Octokit.fsx
-
-group Test
-  source https://nuget.org/api/v2
-  
-  nuget NUnit ~> 2
-  nuget NUnit.Runners ~> 2
+nuget FAKE
+nuget FSharp.Configuration >= 0.5.12
+nuget Octokit >= 0.19.0

@@ -1,0 +1,7 @@
+FRAMEWORK: NET461
+NUGET
+  remote: https://www.nuget.org/api/v2
+  specs:
+    FAKE (4.22.6)
+    FSharp.Configuration (0.5.12)
+    Octokit (0.19.0)
