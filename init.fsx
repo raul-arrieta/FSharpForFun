@@ -103,67 +103,67 @@ let projectName =
   | Some p -> p.Replace(" ", "")
   | None -> "FSharpForFun"
 
-projectName = projectName.Replace("FSharpForFun","FSharpForFunCI");
+//projectName = projectName.Replace("FSharpForFun","FSharpForFunCI");
   
 let solutionFile = localFile (projectName + ".sln")
-move templateSolutionFile solutionFile
+//move templateSolutionFile solutionFile
 
 //Rename project files and directories
-dirsWithProjects
-|> List.iter (fun pd ->
-    // project files
-    pd
-    |> subDirectories
-    |> Array.collect (fun d -> filesInDirMatching "*.?sproj" d)
-    |> Array.iter (fun f -> f.MoveTo(f.Directory.FullName @@ (f.Name.Replace(projectTemplateName, projectName))))
-    // project directories
-    pd
-    |> subDirectories
-    |> Array.iter (fun d -> d.MoveTo(pd.FullName @@ (d.Name.Replace(projectTemplateName, projectName))))
-    )
+//dirsWithProjects
+//|> List.iter (fun pd ->
+//    // project files
+//    pd
+//    |> subDirectories
+//    |> Array.collect (fun d -> filesInDirMatching "*.?sproj" d)
+//    |> Array.iter (fun f -> f.MoveTo(f.Directory.FullName @@ (f.Name.Replace(projectTemplateName, projectName))))
+//    // project directories
+//    pd
+//    |> subDirectories
+//    |> Array.iter (fun d -> d.MoveTo(pd.FullName @@ (d.Name.Replace(projectTemplateName, projectName))))
+//    )
 
 //Now that everything is renamed, we need to update the content of some files
-let replace t r (lines:seq<string>) =
-  seq {
-    for s in lines do
-      if s.Contains(t) then yield s.Replace(t, r)
-      else yield s }
+//let replace t r (lines:seq<string>) =
+//  seq {
+//    for s in lines do
+//      if s.Contains(t) then yield s.Replace(t, r)
+//      else yield s }
+//
+//let replaceWithVarOrMsg t n lines =
+//    replace t (vars.[t] |> function | None -> n | Some s -> s) lines
+//
+//let overwrite file content = File.WriteAllLines(file, content |> Seq.toArray); file
 
-let replaceWithVarOrMsg t n lines =
-    replace t (vars.[t] |> function | None -> n | Some s -> s) lines
+//let replaceContent file =
+//  File.ReadAllLines(file) |> Array.toSeq
+//  |> replace projectTemplateName projectName
+//  |> replace (oldProjectGuid.ToLowerInvariant()) (projectGuid.ToLowerInvariant())
+//  |> replace (oldTestProjectGuid.ToLowerInvariant()) (testProjectGuid.ToLowerInvariant())
+//  |> replace (oldProjectGuid.ToUpperInvariant()) (projectGuid.ToUpperInvariant())
+//  |> replace (oldTestProjectGuid.ToUpperInvariant()) (testProjectGuid.ToUpperInvariant())
+//  |> replace solutionTemplateName projectName
+//  |> replaceWithVarOrMsg "##Author##" "Author not set"
+//  |> replaceWithVarOrMsg "##Description##" "Description not set"
+//  |> replaceWithVarOrMsg "##Summary##" ""
+//  |> replaceWithVarOrMsg "##Tags##" ""
+//  |> replaceWithVarOrMsg "##GitHome##" "[github-user]"
+//  |> overwrite file
+//  |> sprintf "%s updated"
 
-let overwrite file content = File.WriteAllLines(file, content |> Seq.toArray); file
+//let rec filesToReplace dir = seq {
+//  yield! Directory.GetFiles(dir, "*.?sproj")
+//  yield! Directory.GetFiles(dir, "*.fs")
+//  yield! Directory.GetFiles(dir, "*.cs")
+//  yield! Directory.GetFiles(dir, "*.xaml")
+//  yield! Directory.GetFiles(dir, "*.fsx")
+//  yield! Directory.GetFiles(dir, "paket.template")
+//  yield! Directory.EnumerateDirectories(dir) |> Seq.collect filesToReplace
+//}
 
-let replaceContent file =
-  File.ReadAllLines(file) |> Array.toSeq
-  |> replace projectTemplateName projectName
-  |> replace (oldProjectGuid.ToLowerInvariant()) (projectGuid.ToLowerInvariant())
-  |> replace (oldTestProjectGuid.ToLowerInvariant()) (testProjectGuid.ToLowerInvariant())
-  |> replace (oldProjectGuid.ToUpperInvariant()) (projectGuid.ToUpperInvariant())
-  |> replace (oldTestProjectGuid.ToUpperInvariant()) (testProjectGuid.ToUpperInvariant())
-  |> replace solutionTemplateName projectName
-  |> replaceWithVarOrMsg "##Author##" "Author not set"
-  |> replaceWithVarOrMsg "##Description##" "Description not set"
-  |> replaceWithVarOrMsg "##Summary##" ""
-  |> replaceWithVarOrMsg "##Tags##" ""
-  |> replaceWithVarOrMsg "##GitHome##" "[github-user]"
-  |> overwrite file
-  |> sprintf "%s updated"
-
-let rec filesToReplace dir = seq {
-  yield! Directory.GetFiles(dir, "*.?sproj")
-  yield! Directory.GetFiles(dir, "*.fs")
-  yield! Directory.GetFiles(dir, "*.cs")
-  yield! Directory.GetFiles(dir, "*.xaml")
-  yield! Directory.GetFiles(dir, "*.fsx")
-  yield! Directory.GetFiles(dir, "paket.template")
-  yield! Directory.EnumerateDirectories(dir) |> Seq.collect filesToReplace
-}
-
-[solutionFile] @ (dirsWithProjects
-    |> List.collect (fun d -> d.FullName |> filesToReplace |> List.ofSeq))
-|> List.map replaceContent
-|> List.iter print
+//[solutionFile] @ (dirsWithProjects
+//    |> List.collect (fun d -> d.FullName |> filesToReplace |> List.ofSeq))
+//|> List.map replaceContent
+//|> List.iter print
 
 //Replace tokens in build template
 let generate templatePath generatedFilePath =
@@ -171,13 +171,13 @@ let generate templatePath generatedFilePath =
 
   let newContent =
     File.ReadAllLines(templatePath) |> Array.toSeq
-    |> replace "##ProjectName##" projectName
-    |> replaceWithVarOrMsg "##Summary##" "Project has no summmary; update build.fsx"
-    |> replaceWithVarOrMsg "##Description##" "Project has no description; update build.fsx"
-    |> replaceWithVarOrMsg "##Author##" "Update Author in build.fsx"
-    |> replaceWithVarOrMsg "##Tags##" ""
-    |> replaceWithVarOrMsg "##GitHome##" "Update GitHome in build.fsx"
-    |> replaceWithVarOrMsg "##GitName##" projectName
+//    |> replace "##ProjectName##" projectName
+//    |> replaceWithVarOrMsg "##Summary##" "Project has no summmary; update build.fsx"
+//    |> replaceWithVarOrMsg "##Description##" "Project has no description; update build.fsx"
+//    |> replaceWithVarOrMsg "##Author##" "Update Author in build.fsx"
+//    |> replaceWithVarOrMsg "##Tags##" ""
+//    |> replaceWithVarOrMsg "##GitHome##" "Update GitHome in build.fsx"
+//    |> replaceWithVarOrMsg "##GitName##" projectName
 
   File.WriteAllLines(generatedFilePath, newContent)
   File.Delete(templatePath)
